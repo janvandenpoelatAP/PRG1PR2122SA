@@ -11,8 +11,18 @@ namespace SchoolAdmin
         public string Naam;
         public DateTime GeboorteDatum;
         public uint Sudentennummer;
-        public string[] Cursussen;
+        private string[] cursussen;
 
+        public async void RegistreerVoorCursus(string cursus)
+        {
+            for (int i = 1; i < cursussen.Length; i++)
+            {
+                if (cursussen[i] is null)
+                {
+                    cursussen[i] = cursus;
+                }
+            }
+        }
         public string GenereerNaamkaarje()
         {
             return $"{Naam} (STUDENT)";
@@ -20,7 +30,7 @@ namespace SchoolAdmin
         public double BepaalWerkbelasting()
         {
             double werkbelasting = 0.0;
-            for (int i = 0; i < Cursussen.Length; i++)
+            for (int i = 0; i < cursussen.Length; i++)
             {
                 werkbelasting += 10.0;
             }
