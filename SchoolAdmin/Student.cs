@@ -12,6 +12,19 @@ namespace SchoolAdmin
         public DateTime GeboorteDatum;
         public uint Sudentennummer;
         public string[] Cursussen;
-        
+
+        public string GenereerNaamkaarje()
+        {
+            return $"{Naam} (STUDENT)";
+        }
+        public double BepaalWerkbelasting()
+        {
+            double werkbelasting = 0.0;
+            for (int i = 0; i < Cursussen.Length; i++)
+            {
+                werkbelasting += 10.0;
+            }
+            return werkbelasting;
+        }
     }
 }
