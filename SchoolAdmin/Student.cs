@@ -59,10 +59,7 @@ namespace SchoolAdmin
             {
                 if (cursusResultaten[i] is null)
                 {
-                    CursusResultaat nieuwCursusResultaat = new CursusResultaat();
-                    cursusResultaten[i] = nieuwCursusResultaat;
-                    nieuwCursusResultaat.Naam = cursus;
-                    Kwoteer((byte)i, behaaldResultaat);
+                    cursusResultaten[i] = new CursusResultaat(cursus, behaaldResultaat);;
                     return;
                 }
             }
