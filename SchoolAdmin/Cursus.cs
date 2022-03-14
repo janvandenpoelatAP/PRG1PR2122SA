@@ -18,16 +18,36 @@ namespace SchoolAdmin
         }
         public string Titel;
         public Student[] Studenten;
-        public Cursus(string titel, Student[] studenten)
+        public Cursus(string titel, Student[] studenten, byte studiepunten)
         {
             this.Titel = titel;
             this.Studenten = studenten;
             this.id = Cursus.maxId;
+            this.Studiepunten = studiepunten;            
             Cursus.maxId++;
-        } 
+        }
+        public Cursus(string titel, Student[] studenten) : this(titel, studenten, 3)
+        {
+        }
+        public Cursus(string titel) : this(titel, new Student[2])
+        {
+        }
+        private byte studiepunten;
+        public byte Studiepunten
+        {
+            get 
+            { 
+                return studiepunten; 
+            }
+            private set 
+            { 
+                studiepunten = value; 
+            }
+        }
+        
         public void ToonOverzicht()
         {
-            Console.WriteLine($"{Titel} ({Id})");
+            Console.WriteLine($"{Titel} ({Id} - {Studiepunten} stp)");
             for (int i = 0; i < Studenten.Length; i++)
             {
                 if (Studenten[i] is not null)
@@ -40,9 +60,9 @@ namespace SchoolAdmin
         public static void DemonstreerCursussen()
         {
             Cursus communicatie = new Cursus("Communicatie", new Student[2]);
-            Cursus programmeren = new Cursus("Programmeren", new Student[2]);
-            Cursus webtechnologie = new Cursus("Webtechnologie", new Student[2]);
-            Cursus databanken = new Cursus("Databanken", new Student[2]);
+            Cursus programmeren = new Cursus("Programmeren");
+            Cursus webtechnologie = new Cursus("Webtechnologie", new Student[5], 6);
+            Cursus databanken = new Cursus("Databanken", new Student[7], 5);
 
             Student student1 = new Student();
             student1.GeboorteDatum = new DateTime(2001, 1, 3);
