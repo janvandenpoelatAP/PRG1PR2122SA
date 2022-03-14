@@ -9,7 +9,7 @@ namespace SchoolAdmin
     {
         public static uint Sudententeller;
         public string Naam;
-        public DateTime GeboorteDatum;
+        public DateTime Geboortedatum;
         public uint Sudentennummer;
         private CursusResultaat[] cursusResultaten = new CursusResultaat[5];
         public byte BepaalWerkbelasting()
@@ -67,8 +67,8 @@ namespace SchoolAdmin
         public void ToonOverzicht()
         {
             DateTime nu = DateTime.Now;
-            int aantalJaar = nu.Year - this.GeboorteDatum.Year - 1;
-            if (nu.Month > GeboorteDatum.Month || nu.Month == GeboorteDatum.Month && nu.Day >= GeboorteDatum.Day)
+            int aantalJaar = nu.Year - this.Geboortedatum.Year - 1;
+            if (nu.Month > Geboortedatum.Month || nu.Month == Geboortedatum.Month && nu.Day >= Geboortedatum.Day)
             {
                 aantalJaar++;
             }
@@ -85,11 +85,23 @@ namespace SchoolAdmin
             }
             Console.WriteLine($"Gemiddelde:\t{Gemiddelde():F1}\n");
         }
+        public static Student StudentUitTekstFormaat(string csvWaarde)
+        {
+            string[] studentInfo = csvWaarde.Split(';');
+            Student student = new Student();
+            student.Naam = studentInfo[0];
+            student.Geboortedatum = new DateTime(Convert.ToInt32(studentInfo[3]), Convert.ToInt32(studentInfo[2]), Convert.ToInt32(studentInfo[1]));
+            for (int i = 4; i < studentInfo.Length; i += 2)
+            {
+                student.RegistreerCursusResultaat(studentInfo[i], Convert.ToByte(studentInfo[i + 1]));
+            }
+            return student;
+        }
         public static void DemonstreerStudenten()
         {
             Student student1 = new Student();
             student1.Naam = "Said Aziz";
-            student1.GeboorteDatum = new DateTime(2001,1,3);
+            student1.Geboortedatum = new DateTime(2001,1,3);
             student1.RegistreerCursusResultaat("Communicatie", 12);
             student1.RegistreerCursusResultaat("Programmeren", 15);
             student1.RegistreerCursusResultaat("Webtechnologie", 13);
@@ -97,11 +109,18 @@ namespace SchoolAdmin
             
             Student student2 = new Student();
             student2.Naam = "Mieke Vermeulen";
-            student2.GeboorteDatum = new DateTime(1998, 1, 1);
+            student2.Geboortedatum = new DateTime(1998, 1, 1);
             student2.RegistreerCursusResultaat("Communicatie", 13);
             student2.RegistreerCursusResultaat("Programmeren", 16);
             student2.RegistreerCursusResultaat("Databanken", 14);
             student2.ToonOverzicht();
+        }
+        public static void DemonstreerStudentUitTekstFormaat()
+        {
+            Console.WriteLine("Geef de tekstvoorstelling van 1 student in CSV-formaat:");
+            string csvWaarde = Console.ReadLine();
+            Student student = Student.StudentUitTekstFormaat(csvWaarde);
+            student.ToonOverzicht();
         }
     }
 }
