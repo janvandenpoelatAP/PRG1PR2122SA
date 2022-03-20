@@ -10,7 +10,7 @@ namespace SchoolAdmin
         public static uint Sudententeller;
         public string Naam;
         public DateTime Geboortedatum;
-        public uint Sudentennummer;
+        public uint Studentennummer;
         private VakInschrijving[] vakInschrijvingen = new VakInschrijving[5];
         public byte BepaalWerkbelasting()
         {
@@ -39,7 +39,7 @@ namespace SchoolAdmin
                     }
                 }
             }
-             return som / aantalCursussen;
+            return som / aantalCursussen;
         }
         public string GenereerNaamkaarje()
         {
