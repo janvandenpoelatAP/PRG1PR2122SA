@@ -7,7 +7,7 @@ namespace SchoolAdmin
         static void Main(string[] args)
         {
             int keuze = 0;
-            Console.WriteLine($"Wat wil je demonstreren?\n\t1. Studenten\n\t2. Cursussen\n\t3. Student Uit tekst\n");
+            Console.WriteLine($"Wat wil je demonstreren?\n\t1. Studenten\n\t2. Cursussen\n\t3. Student Uit tekst\n\t4. StudieProgramma\n");
             keuze = Convert.ToInt32(Console.ReadLine());
             if (keuze == 1)
             {
@@ -20,6 +20,10 @@ namespace SchoolAdmin
             else if (keuze == 3)
             {
                 Student.DemonstreerStudentUitTekstFormaat();
+            }
+            else if (keuze == 4)
+            {
+                StudieProgramma.DemonstreerStudieProgrmma();
             }
         }
     }
