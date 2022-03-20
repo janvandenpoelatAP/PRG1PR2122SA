@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SchoolAdmin
 {
-    public class CursusResultaat
+    public class VakInschrijving
     {
         private string naam;
         public string Naam
@@ -15,8 +15,8 @@ namespace SchoolAdmin
                 return naam; 
             }
         }
-        private byte resultaat;
-        public byte Resultaat
+        private byte? resultaat;
+        public byte? Resultaat
         {
             get 
             { 
@@ -24,13 +24,13 @@ namespace SchoolAdmin
             }
             set 
             { 
-                if (!(value < 0 || value > 20))
+                if ((value is null) || !(value < 0 || value > 20))
                 {
                     resultaat = value; 
                 }
             }
         }
-        public CursusResultaat(string naam, byte resultaat)
+        public VakInschrijving(string naam, byte? resultaat)
         {
             this.naam = naam;
             this.Resultaat = resultaat;

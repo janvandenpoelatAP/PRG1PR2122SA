@@ -11,13 +11,13 @@ namespace SchoolAdmin
         public string Naam;
         public DateTime Geboortedatum;
         public uint Sudentennummer;
-        private CursusResultaat[] cursusResultaten = new CursusResultaat[5];
+        private VakInschrijving[] vakInschrijvingen = new VakInschrijving[5];
         public byte BepaalWerkbelasting()
         {
             byte werkbelasting = 0;
-            for (int i = 0; i < cursusResultaten.Length; i++)
+            for (int i = 0; i < vakInschrijvingen.Length; i++)
             {
-                if (cursusResultaten[i] is not null)
+                if (vakInschrijvingen[i] is not null)
                 {
                     werkbelasting += 10;
                 }
@@ -28,12 +28,15 @@ namespace SchoolAdmin
         {
             int aantalCursussen = 0;
             double som = 0.0;
-            for (int i = 0; i < cursusResultaten.Length; i++)
+            for (int i = 0; i < vakInschrijvingen.Length; i++)
             {
-                if (cursusResultaten[i] is not null)
+                if (vakInschrijvingen[i] is not null)
                 {
-                    som += cursusResultaten[i].Resultaat;
-                    aantalCursussen++;
+                    if (vakInschrijvingen[i].Resultaat is not null)
+                    {
+                        som += (byte)vakInschrijvingen[i].Resultaat;
+                        aantalCursussen++;
+                    }
                 }
             }
              return som / aantalCursussen;
@@ -44,22 +47,22 @@ namespace SchoolAdmin
         }
         public void Kwoteer(byte cursusIndex, byte behaaldResulaat)
         {
-            if (cursusIndex < 0 || cursusIndex >= cursusResultaten.Length || cursusResultaten[cursusIndex] is null || behaaldResulaat > 20)
+            if (cursusIndex < 0 || cursusIndex >= vakInschrijvingen.Length || vakInschrijvingen[cursusIndex] is null || behaaldResulaat > 20)
             {
                 Console.WriteLine("Ongeldig cijfer!");
             }
             else
             {
-               cursusResultaten[cursusIndex].Resultaat = behaaldResulaat;
+               vakInschrijvingen[cursusIndex].Resultaat = behaaldResulaat;
             }
         }
-        public void RegistreerCursusResultaat(string cursus, byte behaaldResultaat)
+        public void RegistreerVakInschrijving(string cursus, byte? behaaldResultaat)
         {
-            for (int i = 0; i < cursusResultaten.Length; i++)
+            for (int i = 0; i < vakInschrijvingen.Length; i++)
             {
-                if (cursusResultaten[i] is null)
+                if (vakInschrijvingen[i] is null)
                 {
-                    cursusResultaten[i] = new CursusResultaat(cursus, behaaldResultaat);;
+                    vakInschrijvingen[i] = new VakInschrijving(cursus, behaaldResultaat);;
                     return;
                 }
             }
@@ -76,11 +79,11 @@ namespace SchoolAdmin
             Console.WriteLine();
             Console.WriteLine("Cijferrapport");
             Console.WriteLine("*************");
-            for (int i = 0; i < cursusResultaten.Length; i++)
+            for (int i = 0; i < vakInschrijvingen.Length; i++)
             {
-                if (cursusResultaten[i] is not null)
+                if (vakInschrijvingen[i] is not null)
                 {
-                    Console.WriteLine($"{cursusResultaten[i].Naam}:\t{cursusResultaten[i].Resultaat}");
+                    Console.WriteLine($"{vakInschrijvingen[i].Naam}:\t{vakInschrijvingen[i].Resultaat}");
                 }
             }
             Console.WriteLine($"Gemiddelde:\t{Gemiddelde():F1}\n");
@@ -93,7 +96,7 @@ namespace SchoolAdmin
             student.Geboortedatum = new DateTime(Convert.ToInt32(studentInfo[3]), Convert.ToInt32(studentInfo[2]), Convert.ToInt32(studentInfo[1]));
             for (int i = 4; i < studentInfo.Length; i += 2)
             {
-                student.RegistreerCursusResultaat(studentInfo[i], Convert.ToByte(studentInfo[i + 1]));
+                student.RegistreerVakInschrijving(studentInfo[i], Convert.ToByte(studentInfo[i + 1]));
             }
             return student;
         }
@@ -102,17 +105,17 @@ namespace SchoolAdmin
             Student student1 = new Student();
             student1.Naam = "Said Aziz";
             student1.Geboortedatum = new DateTime(2001,1,3);
-            student1.RegistreerCursusResultaat("Communicatie", 12);
-            student1.RegistreerCursusResultaat("Programmeren", 15);
-            student1.RegistreerCursusResultaat("Webtechnologie", 13);
+            student1.RegistreerVakInschrijving("Communicatie", 12);
+            student1.RegistreerVakInschrijving("Programmeren", null);
+            student1.RegistreerVakInschrijving("Webtechnologie", 13);
             student1.ToonOverzicht();
             
             Student student2 = new Student();
             student2.Naam = "Mieke Vermeulen";
             student2.Geboortedatum = new DateTime(1998, 1, 1);
-            student2.RegistreerCursusResultaat("Communicatie", 13);
-            student2.RegistreerCursusResultaat("Programmeren", 16);
-            student2.RegistreerCursusResultaat("Databanken", 14);
+            student2.RegistreerVakInschrijving("Communicatie", 13);
+            student2.RegistreerVakInschrijving("Programmeren", null);
+            student2.RegistreerVakInschrijving("Databanken", 14);
             student2.ToonOverzicht();
         }
         public static void DemonstreerStudentUitTekstFormaat()
