@@ -21,7 +21,7 @@ namespace SchoolAdmin
         public string Naam;
         public DateTime GeboorteDatum;
         public uint Studentennummer;
-        private VakInschrijving[] vakInschrijvingen = new VakInschrijving[5];
+        private List<VakInschrijving> vakInschrijvingen = new List<VakInschrijving>();
         public Student(string naam, DateTime geboorteDatum)
         {
             Naam = naam;
@@ -32,12 +32,9 @@ namespace SchoolAdmin
         public byte BepaalWerkbelasting()
         {
             byte werkbelasting = 0;
-            for (int i = 0; i < vakInschrijvingen.Length; i++)
+            foreach (VakInschrijving vakinschrijving in vakInschrijvingen)
             {
-                if (vakInschrijvingen[i] is not null)
-                {
-                    werkbelasting += 10;
-                }
+                werkbelasting += 10;
             }
             return werkbelasting;
         }
@@ -45,15 +42,12 @@ namespace SchoolAdmin
         {
             int aantalCursussen = 0;
             double som = 0.0;
-            for (int i = 0; i < vakInschrijvingen.Length; i++)
+            foreach (VakInschrijving vakInschrijving in vakInschrijvingen)
             {
-                if (vakInschrijvingen[i] is not null)
+                if (vakInschrijving.Resultaat is not null)
                 {
-                    if (vakInschrijvingen[i].Resultaat is not null)
-                    {
-                        som += (byte)vakInschrijvingen[i].Resultaat;
-                        aantalCursussen++;
-                    }
+                    som += (byte)vakInschrijving.Resultaat;
+                    aantalCursussen++;
                 }
             }
             return som / aantalCursussen;
@@ -64,7 +58,7 @@ namespace SchoolAdmin
         }
         public void Kwoteer(byte cursusIndex, byte behaaldResulaat)
         {
-            if (cursusIndex < 0 || cursusIndex >= vakInschrijvingen.Length || vakInschrijvingen[cursusIndex] is null || behaaldResulaat > 20)
+            if (cursusIndex < 0 || cursusIndex >= vakInschrijvingen.Count || vakInschrijvingen[cursusIndex] is null || behaaldResulaat > 20)
             {
                 Console.WriteLine("Ongeldig cijfer!");
             }
@@ -75,14 +69,7 @@ namespace SchoolAdmin
         }
         public void RegistreerVakInschrijving(Cursus cursus, byte? behaaldResultaat)
         {
-            for (int i = 0; i < vakInschrijvingen.Length; i++)
-            {
-                if (vakInschrijvingen[i] is null)
-                {
-                    vakInschrijvingen[i] = new VakInschrijving(cursus, behaaldResultaat);;
-                    return;
-                }
-            }
+            vakInschrijvingen.Add(new VakInschrijving(cursus, behaaldResultaat));
         }
         public void ToonOverzicht()
         {
@@ -118,10 +105,10 @@ namespace SchoolAdmin
         }
         public static void DemonstreerStudenten()
         {
-            Cursus communicatie = new Cursus("Communicatie", new Student[2]);
+            Cursus communicatie = new Cursus("Communicatie", new List<Student>());
             Cursus programmeren = new Cursus("Programmeren");
-            Cursus webtechnologie = new Cursus("Webtechnologie", new Student[5], 6);
-            Cursus databanken = new Cursus("Databanken", new Student[7], 5);
+            Cursus webtechnologie = new Cursus("Webtechnologie", new List<Student>(), 6);
+            Cursus databanken = new Cursus("Databanken", new List<Student>(), 5);
 
             Student student1 = new Student("Said Aziz", new DateTime(2001,1,3));
             student1.RegistreerVakInschrijving(communicatie, 12);
