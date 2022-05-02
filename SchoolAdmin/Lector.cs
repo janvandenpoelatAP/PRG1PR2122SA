@@ -58,6 +58,10 @@ namespace SchoolAdmin
             }
             return builder.ToString();
         }
+        public override string ToString()
+        {
+            return $"{base.ToString()}\nMeerbepaald, lector";
+        }
         public static void DemonstreerLectoren() {
             var taken = new Dictionary<string,byte>();
             var economie = new Cursus("Economie");
