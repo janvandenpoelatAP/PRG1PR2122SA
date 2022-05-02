@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SchoolAdmin
 {
 
-    abstract class Personeel : Persoon
+    public abstract class Personeel : Persoon
     {
         private byte ancienniteit;
         public byte Ancienniteit
