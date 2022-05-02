@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace SchoolAdmin
 {
-    public class Student
+    public class Student : Persoon
     {
-        public static uint Sudententeller;
+        private List<VakInschrijving> vakInschrijvingen = new List<VakInschrijving>();
+        public static uint Studententeller;
         private static List<Student> alleStudenten = new List<Student>();
         public static ImmutableList<Student> AlleStudenten
         {
@@ -17,21 +18,21 @@ namespace SchoolAdmin
                 return alleStudenten.ToImmutableList(); 
             }
         }
-        
-        public string Naam;
-        public DateTime GeboorteDatum;
-        public uint Studentennummer;
-        private List<VakInschrijving> vakInschrijvingen = new List<VakInschrijving>();
-        public Student(string naam, DateTime geboorteDatum)
+        private Dictionary<DateTime,string> dossier;
+        public ImmutableDictionary<DateTime,string> Dossier {
+            get {
+                return this.dossier.ToImmutableDictionary<DateTime,string>();
+            }
+        }
+        public Student(string naam, DateTime geboorteDatum) : base(naam, geboorteDatum)
         {
-            Naam = naam;
-            GeboorteDatum = geboorteDatum;
+            this.dossier = new Dictionary<DateTime, string>();
             AlleStudenten.Add(this);
         }
 
-        public byte BepaalWerkbelasting()
+        public override double BepaalWerkbelasting()
         {
-            byte werkbelasting = 0;
+            double werkbelasting = 0.0;
             foreach (VakInschrijving vakinschrijving in vakInschrijvingen)
             {
                 werkbelasting += 10;
@@ -52,7 +53,7 @@ namespace SchoolAdmin
             }
             return som / aantalCursussen;
         }
-        public string GenereerNaamkaarje()
+        public override string GenereerNaamkaartje()
         {
             return $"{Naam} (STUDENT)";
         }
@@ -74,8 +75,8 @@ namespace SchoolAdmin
         public void ToonOverzicht()
         {
             DateTime nu = DateTime.Now;
-            int aantalJaar = nu.Year - this.GeboorteDatum.Year - 1;
-            if (nu.Month > GeboorteDatum.Month || nu.Month == GeboorteDatum.Month && nu.Day >= GeboorteDatum.Day)
+            int aantalJaar = nu.Year - this.Geboortedatum.Year - 1;
+            if (nu.Month > this.Geboortedatum.Month || nu.Month == this.Geboortedatum.Month && nu.Day >= this.Geboortedatum.Day)
             {
                 aantalJaar++;
             }
@@ -124,6 +125,10 @@ namespace SchoolAdmin
         }
         public static void DemonstreerStudentUitTekstFormaat()
         {
+            Cursus communicatie = new Cursus("Communicatie");
+            Cursus programmeren = new Cursus("Programmeren");
+            Cursus webtechnologie = new Cursus("Webtechnologie", new List<Student>(), 6);
+            Cursus databanken = new Cursus("Databanken", new List<Student>(), 5);
             Console.WriteLine("Geef de tekstvoorstelling van 1 student in CSV-formaat:");
             string csvWaarde = Console.ReadLine();
             Student student = Student.StudentUitTekstFormaat(csvWaarde);
