@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,6 +15,12 @@ namespace SchoolAdmin
             { 
                 return cursus; 
             }
+        }
+        private Student student;
+
+        public Student Student
+        {
+            get { return student; }
         }
         private byte? resultaat;
         public byte? Resultaat
@@ -30,10 +37,20 @@ namespace SchoolAdmin
                 }
             }
         }
-        public VakInschrijving(Cursus cursus, byte? resultaat)
+        private static List<VakInschrijving> alleVakInschrijvingen = new List<VakInschrijving>();
+        public static ImmutableList<VakInschrijving> AlleVakInschrijvingen
         {
+            get
+            {
+                return alleVakInschrijvingen.ToImmutableList<VakInschrijving>();
+            }
+        }
+        public VakInschrijving(Student student, Cursus cursus, byte? resultaat)
+        {
+            this.student = student;
             this.cursus = cursus;
             this.Resultaat = resultaat;
+            alleVakInschrijvingen.Add(this);
         }
     }
 }

@@ -18,6 +18,7 @@ namespace SchoolAdmin
         } 
 
         private static int maxId = 1;
+        public string Titel;
         private int id;
         public int Id
         {
@@ -25,23 +26,6 @@ namespace SchoolAdmin
             { 
                 return id; 
             }
-        }
-        public string Titel;
-        public List<Student> Studenten = new List<Student>();
-        public Cursus(string titel, List<Student> studenten, byte studiepunten)
-        {
-            this.Titel = titel;
-            this.Studenten = studenten;
-            this.id = Cursus.maxId;
-            this.Studiepunten = studiepunten;            
-            RegistreerCursus(this);
-            Cursus.maxId++;
-        }
-        public Cursus(string titel, List<Student> studenten) : this(titel, studenten, 3)
-        {
-        }
-        public Cursus(string titel) : this(titel, new List<Student>())
-        {
         }
         private byte studiepunten;
         public byte Studiepunten
@@ -54,6 +38,47 @@ namespace SchoolAdmin
             { 
                 studiepunten = value; 
             }
+        }
+        public ImmutableList<VakInschrijving> VakInschrijvingen
+        {
+            get
+            {
+                var enkelVoorDezeCursus = new List<VakInschrijving>();
+                foreach (var inschrijving in VakInschrijving.AlleVakInschrijvingen)
+                {
+                    if (inschrijving.Cursus.Equals(this))
+                    {
+                        enkelVoorDezeCursus.Add(inschrijving);
+                    }
+                }
+                return enkelVoorDezeCursus.ToImmutableList<VakInschrijving>();
+            }
+        }
+        public ImmutableList<Student> Studenten
+        {
+            get
+            {
+                var studenten = new List<Student>();
+                foreach (var inschrijving in this.VakInschrijvingen)
+                {
+                    studenten.Add(inschrijving.Student);
+                }
+                return studenten.ToImmutableList<Student>();
+            }
+        }
+        public Cursus(string titel, byte studiepunten)
+        {
+            this.Titel = titel;
+            this.id = Cursus.maxId;
+            this.Studiepunten = studiepunten;            
+            RegistreerCursus(this);
+            Cursus.maxId++;
+        }
+        public Cursus(string titel, List<Student> studenten) : this(titel, 3)
+        {
+        }
+        public Cursus(string titel) : this(titel, new List<Student>())
+        {
         }
         
         public void ToonOverzicht()
@@ -108,20 +133,22 @@ namespace SchoolAdmin
         }
         public static void DemonstreerCursussen()
         {
-            Cursus communicatie = new Cursus("Communicatie", new List<Student>());
+            Cursus communicatie = new Cursus("Communicatie");
             Cursus programmeren = new Cursus("Programmeren");
-            Cursus webtechnologie = new Cursus("Webtechnologie", new List<Student>(), 6);
-            Cursus databanken = new Cursus("Databanken", new List<Student>(), 5);
+            Cursus webtechnologie = new Cursus("Webtechnologie", 6);
+            Cursus databanken = new Cursus("Databanken", 5);
 
             Student student1 = new Student("Said Aziz", new DateTime(2001, 1, 3));
-            Student student2 = new Student("Mieke Vermeulen", new DateTime(2000, 2, 1));
+            student1.RegistreerCursusResultaat(communicatie, 12);
+            student1.RegistreerCursusResultaat(programmeren, null);
+            student1.RegistreerCursusResultaat(webtechnologie, 13);
+            student1.ToonOverzicht();
 
-            communicatie.Studenten.Add(student1);
-            communicatie.Studenten.Add(student2);
-            programmeren.Studenten.Add(student1);
-            programmeren.Studenten.Add(student2);
-            webtechnologie.Studenten.Add(student1);
-            databanken.Studenten.Add(student2);
+            Student student2 = new Student("Mieke Vermeulen", new DateTime(2000, 2, 1));
+            student2.RegistreerCursusResultaat(communicatie, 13);
+            student2.RegistreerCursusResultaat(programmeren, null);
+            student2.RegistreerCursusResultaat(databanken, 14);
+            student2.ToonOverzicht();
 
             communicatie.ToonOverzicht();
             programmeren.ToonOverzicht();
