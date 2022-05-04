@@ -106,6 +106,7 @@ namespace SchoolAdmin
         }
         public void ToonOverzicht()
         {
+            /*
             DateTime nu = DateTime.Now;
             int aantalJaar = nu.Year - this.Geboortedatum.Year - 1;
             if (nu.Month > this.Geboortedatum.Month || nu.Month == this.Geboortedatum.Month && nu.Day >= this.Geboortedatum.Day)
@@ -114,17 +115,23 @@ namespace SchoolAdmin
             }
             Console.WriteLine($"{Naam}, {aantalJaar} jaar");
             Console.WriteLine();
+            */
+            Console.WriteLine(this);
             Console.WriteLine("Cijferrapport");
-            Console.WriteLine("*************");
-            foreach (VakInschrijving vakInschrijving in VakInschrijvingen)
-            {
-                if (vakInschrijving is not null)
+            Console.WriteLine("**********");
+            foreach(var inschrijving in this.VakInschrijvingen) {
+                if (!(inschrijving is null))
                 {
-                    Console.WriteLine($"{vakInschrijving.Cursus.Titel}:\t{vakInschrijving.Resultaat}");
+                    Console.WriteLine($"{inschrijving.Cursus.Titel}:\t{inschrijving.Resultaat}");
                 }
             }
             Console.WriteLine($"Gemiddelde:\t{Gemiddelde():F1}\n");
         }
+        public override string ToString()
+        {
+            return $"{base.ToString()}\nMeerbepaald, student";
+        }
+
         public static Student StudentUitTekstFormaat(string csvWaarde)
         {
             string[] studentInfo = csvWaarde.Split(';');
@@ -165,6 +172,14 @@ namespace SchoolAdmin
             string csvWaarde = Console.ReadLine();
             Student student = Student.StudentUitTekstFormaat(csvWaarde);
             student.ToonOverzicht();
+        }
+        public static void LeesVanafCommandLine()
+        {
+            Console.WriteLine("Naam van de student?");
+            var naam = Console.ReadLine();
+            Console.WriteLine("Geboortedatum van de student?");
+            var geboorteDatum = Convert.ToDateTime(Console.ReadLine());
+            new Student(naam, geboorteDatum);
         }
     }
 }
