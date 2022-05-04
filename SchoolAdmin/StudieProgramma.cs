@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,26 +16,14 @@ namespace SchoolAdmin
                 return naam; 
             }
         }
-        private List<Cursus> cursussen = new List<Cursus>();
-        public List<Cursus> Cursussen
-        {
-            get 
-            { 
-                return cursussen; 
-            }
-            set 
-            {
-                if (value is null)
-                {
-                    Console.WriteLine("Null is niet toegelaten");
-                }
-                else
-                {
-                    cursussen = value;
-                } 
+       private Dictionary<Cursus,byte> cursussen = new Dictionary<Cursus,byte>();
+        public ImmutableList<Cursus> Cursussen {
+            get {
+                return this.cursussen.Keys.ToImmutableList<Cursus>();
             }
         }
-        public StudieProgramma(string naam)
+
+       public StudieProgramma(string naam)
         {
             this.naam = naam;
         }
@@ -51,37 +40,24 @@ namespace SchoolAdmin
         }
         public static void DemonstreerStudieProgrmma()
         {
-            /* Stap 1
-	        Cursus communicatie = new Cursus("Communicatie");
-            Cursus programmeren = new Cursus("Programmeren");
-            Cursus databanken = new Cursus("Databanken", new Student[7], 5);
-            Cursus[] cursussenProgrammeren = { communicatie, programmeren, databanken };
-            Cursus[] cursussenSnb = { communicatie, programmeren, databanken };
-            StudieProgramma programmerenProgramma = new StudieProgramma("Programmeren");
-            StudieProgramma snbProgramma = new StudieProgramma("Systeem- en netwerkbeheer");
-            programmerenProgramma.cursussen = cursussenProgrammeren;
-            snbProgramma.cursussen = cursussenSnb;
-            // later wordt Databanken geschrapt uit het programma SNB
-            snbProgramma.cursussen[2] = null;
-            programmerenProgramma.ToonOverzicht();
-            snbProgramma.ToonOverzicht();
-            */
             Cursus communicatie = new Cursus("Communicatie");
 	        Cursus programmeren = new Cursus("Programmeren");
 	        Cursus databanken = new Cursus("Databanken", 5);
-	        List<Cursus> cursussenProgrammeren = new List<Cursus> { communicatie, programmeren, databanken };
-	        List<Cursus> cursussenSnb = new List<Cursus> { communicatie, programmeren, databanken };
-	        StudieProgramma programmerenProgramma = new StudieProgramma("Programmeren");
-	        StudieProgramma snbProgramma = new StudieProgramma("Systeem- en netwerkbeheer");
-	        programmerenProgramma.cursussen = cursussenProgrammeren;
-	        snbProgramma.cursussen = cursussenSnb;
-            // later wordt Databanken geschrapt uit het programma SNB
-	        // voor SNB wordt bovendien Programmeren hernoemd naar Scripting
             Cursus scripting = new Cursus("Scripting");
-	        snbProgramma.cursussen[2] = null;
-	        snbProgramma.cursussen[1]= scripting;;
-	        programmerenProgramma.ToonOverzicht();
-	        snbProgramma.ToonOverzicht();
+            var cursussen1Dictionary = new Dictionary<Cursus, byte>();
+            cursussen1Dictionary.Add(communicatie, 1);
+            cursussen1Dictionary.Add(programmeren, 1);
+            cursussen1Dictionary.Add(databanken, 1);
+            // gewoon een andere schrijfwijze voor dictionaries
+            var cursussen2Dictionary = new Dictionary<Cursus, byte> { { communicatie, 2 }, { scripting, 1 }, { databanken, 1 } };
+            StudieProgramma programmerenProgramma = new StudieProgramma("Programmeren");
+            StudieProgramma snbProgramma = new StudieProgramma("Systeem- en netwerkbeheer");
+            programmerenProgramma.cursussen = cursussen1Dictionary;
+            snbProgramma.cursussen = cursussen2Dictionary;
+            // later wordt Databanken geschrapt uit het programma SNB
+            snbProgramma.cursussen.Remove(databanken);
+            programmerenProgramma.ToonOverzicht();
+            snbProgramma.ToonOverzicht();
         }
     }
 }
