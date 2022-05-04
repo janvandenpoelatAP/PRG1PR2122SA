@@ -8,29 +8,39 @@ namespace SchoolAdmin
 {
     public class AdministratiefPersoneel : Personeel
     {
-        private static List<AdministratiefPersoneel> alleAdministratiefPersoneel = new List<AdministratiefPersoneel>();
-        public static ImmutableList<AdministratiefPersoneel> AlleAdministratiefPersoneel {
-            get {
-                return alleAdministratiefPersoneel.ToImmutableList<AdministratiefPersoneel>();
+        public static ImmutableList<AdministratiefPersoneel> AlleAdministratiefPersoneel
+        {
+            get
+            {
+                var enkelAdministratiefPersoneel = new List<AdministratiefPersoneel>();
+                foreach (var persoon in Persoon.AllePersonen)
+                {
+                    if (persoon is AdministratiefPersoneel)
+                    {
+                        enkelAdministratiefPersoneel.Add((AdministratiefPersoneel)persoon);
+                    }
+                }
+                return enkelAdministratiefPersoneel.ToImmutableList<AdministratiefPersoneel>();
             }
         }
 
-        public AdministratiefPersoneel(string naam, DateTime geboortedatum, Dictionary<string,byte> taken) : base(naam, geboortedatum, taken) {
-            alleAdministratiefPersoneel.Add(this);
+        public AdministratiefPersoneel(string naam, DateTime geboortedatum, Dictionary<string, byte> taken) : base(naam, geboortedatum, taken)
+        {
         }
 
         public override uint BerekenSalaris()
         {
             // per 3 jaar 75 euro extra bovenop basisloon 2000
             // maar tewerkstelling moet ook in rekening gebracht (max 40u)
-            double basis = (2000 + Math.Min(40,(this.Ancienniteit / 3)) * 75);
-            return (uint) (basis * Math.Min(40,this.BepaalWerkbelasting()) / 40);
+            double basis = (2000 + Math.Min(40, (this.Ancienniteit / 3)) * 75);
+            return (uint)(basis * Math.Min(40, this.BepaalWerkbelasting()) / 40);
         }
 
         public override double BepaalWerkbelasting()
         {
             double totaal = 0;
-            foreach(byte taakLengte in this.taken.Values) {
+            foreach (byte taakLengte in this.taken.Values)
+            {
                 totaal += taakLengte;
             }
             return totaal;
@@ -40,7 +50,7 @@ namespace SchoolAdmin
         {
             return $@"{this.Naam} (ADMINISTRATIE)";
         }
-                
+
         public override string ToString()
         {
             return $"{base.ToString()}\nMeerbepaald, administratief personeel";

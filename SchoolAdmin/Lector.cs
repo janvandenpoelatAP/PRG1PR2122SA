@@ -13,19 +13,24 @@ namespace SchoolAdmin
 
         private Dictionary<Cursus, double> cursussen;
 
-        private static List<Lector> alleLectoren = new List<Lector>();
-
         public static ImmutableList<Lector> AlleLectoren
         {
             get
             {
-                return alleLectoren.ToImmutableList<Lector>();
+                var enkelLectoren = new List<Lector>(); // kan ook: ImmutableList.CreateBuilder<Lector>();
+                foreach (var persoon in Persoon.AllePersonen)
+                {
+                    if (persoon is Lector)
+                    {
+                        enkelLectoren.Add((Lector) persoon);
+                    }
+                }
+                return enkelLectoren.ToImmutableList<Lector>();
             }
         }
 
         public Lector(string naam, DateTime geboortedatum, Dictionary<string, byte> taken) : base(naam, geboortedatum, taken)
         {
-            alleLectoren.Add(this);
             this.cursussen = new Dictionary<Cursus, double>();
         }
 

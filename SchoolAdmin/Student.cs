@@ -10,12 +10,19 @@ namespace SchoolAdmin
     {
         private List<VakInschrijving> vakInschrijvingen = new List<VakInschrijving>();
         public static uint Studententeller;
-        private static List<Student> alleStudenten = new List<Student>();
         public static ImmutableList<Student> AlleStudenten
         {
-            get 
-            { 
-                return alleStudenten.ToImmutableList(); 
+            get
+            {
+                var enkelStudenten = new List<Student>();
+                foreach (var persoon in Persoon.AllePersonen)
+                {
+                    if (persoon is Student)
+                    {
+                        enkelStudenten.Add((Student)persoon);
+                    }
+                }
+                return enkelStudenten.ToImmutableList<Student>();
             }
         }
         private Dictionary<DateTime,string> dossier;
@@ -27,7 +34,6 @@ namespace SchoolAdmin
         public Student(string naam, DateTime geboorteDatum) : base(naam, geboorteDatum)
         {
             this.dossier = new Dictionary<DateTime, string>();
-            AlleStudenten.Add(this);
         }
 
         public override double BepaalWerkbelasting()
