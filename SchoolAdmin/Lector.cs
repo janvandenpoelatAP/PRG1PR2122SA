@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace SchoolAdmin
 {
-    public class Lector
-: Personeel
+    public class Lector : Personeel
     {
 
         private Dictionary<Cursus, double> cursussen;

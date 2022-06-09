@@ -19,6 +19,8 @@ namespace SchoolAdmin
                 Console.WriteLine("8. Cursus toevoegen");
                 Console.WriteLine("9. VakInschrijving toevoegen");
                 Console.WriteLine("10. Inschrijvingsgegevens tonen");
+                Console.WriteLine("11. Studenten tonen");
+                Console.WriteLine("12. Cursussen tonen");
                 int antwoord = Convert.ToInt32(Console.ReadLine());
                 switch (antwoord)
                 {
@@ -51,6 +53,12 @@ namespace SchoolAdmin
                         break;
                     case 10:
                         VakInschrijving.ToonInschrijvingsGegevens();
+                        break;
+                    case 11:
+                        Student.ToonStudenten();
+                        break;
+                    case 12:
+                        Cursus.ToonCursussen();
                         break;
                     default:
                         Console.WriteLine("Ongeldig antwoord.");
